@@ -1,5 +1,6 @@
 body{
     font-family: 'Nunito';
+
 }
 
 h2{
@@ -15,6 +16,8 @@ h2{
 
 #container{
     display: flex;
+    /* justify-content: flex-start; */
+
 }
 
 #socket-chat{
@@ -23,25 +26,41 @@ h2{
     border: 1px solid #ddd;
     box-shadow: 1px 3px 5px rgba(0,0,0,0.05);
     border-radius: 2px;
-    flex: 1;
-}
+    flex: 2;
+} 
 
 #chat-window{
-    vertical-align: bottom;
     height: 400px;
-    overflow: auto;
+    width: 100%;
+    overflow: none;
+    position: relative;
     background: #f9f9f9;
 
 }
-#user-list{
+#user-container{
+    text-align: center;
+    min-height: 600px;
+    max-width: 600px;
+    margin: 30px auto;
+    padding-left: 50px;
+    border: 1px solid #ddd;
     height: auto;
-    align-self: start;
+    /* align-self: start; */
     overflow: auto;
     flex: 0 0 25%;
+    box-shadow: 1px 3px 5px rgba(0,0,0,0.05);
+    border-radius: 2px;
+    /* flex: 1; */
 }
 
-#output p{
-    vertical-align: bottom;
+
+#output{
+
+    overflow: auto;
+    position: absolute;
+    bottom:     0;
+    width: 100%;
+    max-height: 375px;
     padding: 14px 0px;
     margin: 0 20px;
     border-bottom: 1px solid #e9e9e9;
