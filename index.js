@@ -10,8 +10,10 @@ var server = app.listen(4000, function() {
 
 // Variable Setup
 var userlist = [];
-var usercolor;
+var onlineusers = [];
+
 var chatlog = [];
+var isCookie = false;
 
 // Static files
 app.use(express.static('public'));
@@ -41,23 +43,57 @@ function currentTime() {
 // Socket Init
 
 io.on('connection', socket => {
+  var username;
+  var usercolor;
+  var nameIsTaken = false;
+
   // New user socket init
-  var username = UsernameGenerator.generateUsername();
-  var usercolor = getRandomColor();
 
-  var user = { name: username, color: usercolor };
+  socket.on('cookie', (data)=>{
+    console.log('cookie reached')
 
-  userlist.push(user);
+    for(var i = 0; i < userlist.length ; i++){
+      if (data.username === userlist[i].name){
+        nameIsTaken = true;
+        socket.emit('taken name');
+      }
+    }
+    if(nameIsTaken === false){
+      username = data.username;
+      usercolor = data.color;
+      var user = { name: username, color: usercolor };
+      userlist.push(user);
+      socket.emit('init user', {
+        name: username,
+        color: usercolor
+      });
+      socket.emit('chat log', chatlog);
+      io.sockets.emit('user list', userlist);
+    
 
-  socket.emit('init user', {
-    name: username,
-    color: usercolor
+    }
   });
-  io.sockets.emit('chat log', chatlog);
-  io.sockets.emit('user list', userlist);
 
+  socket.on('no cookie', ()=>{
+    console.log('no cookie reached')
+    username = UsernameGenerator.generateUsername();
+    usercolor = getRandomColor();
+    var user = { name: username, color: usercolor };
+    userlist.push(user);
+    socket.emit('init user', {
+      name: username,
+      color: usercolor
+    });
+    socket.emit('chat log', chatlog);
+    io.sockets.emit('user list', userlist);
+  
+
+  });
+
+  console.log(username)
+ 
   // Handle chat event
-  socket.on('chat', data => {
+  socket.on('chat', (data) => {
     data.time = currentTime();
     chatlog.push(data);
     io.sockets.emit('chat', data);
@@ -80,6 +116,8 @@ io.on('connection', socket => {
             io.sockets.emit('user list', userlist);
           }
         }
+      }else{
+        socket.emit('taken name');
       }
     }
   });
