@@ -65,6 +65,7 @@ function updateScroll(element) {
 btn.addEventListener('click', function () {
     console.log(message.value.slice(0, 10))
     console.log(message.value.slice(0, 1).length)
+    
     if((message.value.slice(0,1) === '/' &&  message.value.slice(0, 10) !== '/nickcolor') && message.value.slice(0, 5) !== '/nick'){
         alert("'/' commands only include /nick to change nickname or /nickcolor to change user color.")
     }else if (message.value.slice(0, 10) === '/nickcolor') {
@@ -79,9 +80,10 @@ btn.addEventListener('click', function () {
         }
 
     } else if (message.value.slice(0, 5) === '/nick') {
+
         var newnick = message.value.slice(5, message.value.length);
         var taken = false;
-        for (var i = 0; i < roomlist.length; i++) {x
+        for (var i = 0; i < roomlist.length; i++) {
             console.log(roomlist[i] + "test" + newnick)
             if (RegExp(roomlist[i]).test(newnick)) {
                 taken = true;
