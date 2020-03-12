@@ -78,6 +78,7 @@ io.on('connection', socket => {
     console.log('no cookie reached')
     username = UsernameGenerator.generateUsername();
     usercolor = getRandomColor();
+    console.log(usercolor);
     var user = { name: username, color: usercolor };
     userlist.push(user);
     socket.emit('init user', {
@@ -107,12 +108,18 @@ io.on('connection', socket => {
         //could be simplified if marking index of username in first passthrough
         for (var i = 0; i < userlist.length; i++) {
           if (userlist[i].name === username) {
-            user.color = userlist[i].color;
+            usercolor= userlist[i].color;
             userlist.splice(i, 1);
-            user.name = data;
+            //user.color = usercolor;
+            //user.name = data;
+            username = data;
+            var user = { name: username, color: usercolor };
 
             userlist.push(user);
-            socket.emit('init user', user);
+            socket.emit('init user', {name: username,
+              color: usercolor});
+
+
             io.sockets.emit('user list', userlist);
           }
         }
@@ -125,9 +132,14 @@ io.on('connection', socket => {
   socket.on('colorchange', (userdata, newcolor) => {
     for (var i = 0; i < userlist.length; i++){
         if(userdata === userlist[i].name){
+            newcolor = "#" + newcolor;
             userlist[i].color = newcolor;
             usercolor = newcolor;
-            socket.emit('init user', user);
+            var user = { name: username, color: usercolor };
+            socket.emit('init user', {
+              name: username,
+              color: usercolor});
+
             io.sockets.emit('user list', userlist);
         }
 
