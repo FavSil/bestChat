@@ -85,7 +85,7 @@ btn.addEventListener('click', function () {
         var taken = false;
         for (var i = 0; i < roomlist.length; i++) {
             console.log(roomlist[i] + "test" + newnick)
-            if (RegExp(roomlist[i]).test(newnick)) {
+            if (message.value === newnick) {
                 taken = true;
             }
         }
