@@ -58,11 +58,16 @@ function updateScroll(element) {
     element.scrollTop = element.scrollHeight;
   }
 
+  function checknick(nickname){
+
+  };
 // Emit events
 btn.addEventListener('click', function () {
-
-
-    if (message.value.slice(0, 10) === '/nickcolor') {
+    console.log(message.value.slice(0, 10))
+    console.log(message.value.slice(0, 1).length)
+    if((message.value.slice(0,1) === '/' &&  message.value.slice(0, 10) !== '/nickcolor') && message.value.slice(0, 5) !== '/nick'){
+        alert("'/' commands only include /nick to change nickname or /nickcolor to change user color.")
+    }else if (message.value.slice(0, 10) === '/nickcolor') {
         var newcolor = message.value.slice(11, 17);
         console.log(newcolor)
         if (isHex(newcolor)) {
@@ -74,19 +79,20 @@ btn.addEventListener('click', function () {
         }
 
     } else if (message.value.slice(0, 5) === '/nick') {
-
         var newnick = message.value.slice(5, message.value.length);
         var taken = false;
-        for (var i = 0; i < roomlist.length; i++) {
-            if (roomlist[i].name === newnick) {
+        for (var i = 0; i < roomlist.length; i++) {x
+            console.log(roomlist[i] + "test" + newnick)
+            if (RegExp(roomlist[i]).test(newnick)) {
                 taken = true;
-                alert("nickname already taken")
             }
         }
         if (taken !== true) {
             console.log(newnick);
             socket.emit('nickchange', newnick);
             setCookie("username", newnick);
+        }else if (taken === true){
+            alert("nickname is taken");
         }
 
     } else if (message.value === "") {
@@ -124,7 +130,7 @@ socket.on('disconnect', (reason) => {
 // Listen for events
 
 socket.on('taken name', () => {
-    alert("name is taken, a random one has been asigned.")
+    alert("name is taken")
 })
 
 socket.on('chat log', (data) => {
@@ -154,8 +160,9 @@ socket.on('chat', function (data) {
 socket.on('user list', (data) => {
     console.log(data)
     userlist.innerHTML = "";
-    //roomlist = data;
+    roomlist = [];
     for (var i = 0; i < data.length; i++) {
+        roomlist.push(data[i].name);
         userlist.innerHTML += '<p><strong style="color:' + data[i].color + ' ">' + data[i].name + '</p>';
     }
 });
