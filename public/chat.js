@@ -49,7 +49,7 @@ function getOutput() {
     }
 }
 function isHex(string) {
-    var parsedString = parseInt(h, 16);
+    var parsedString = parseInt(string, 16);
     return (parsedString.toString(16) === string.toLowerCase())
 }
 
@@ -63,12 +63,12 @@ btn.addEventListener('click', function () {
 
 
     if (message.value.slice(0, 10) === '/nickcolor') {
-        var newcolor = message.value.slice(10, 17);
-        if (inHex(newcolor)) {
-            console.log(newcolor)
-            console.log(message.value)
+        var newcolor = message.value.slice(11, 17);
+        console.log(newcolor)
+        if (isHex(newcolor)) {
+            console.log(newcolor);
             socket.emit('colorchange', currentuser, newcolor);
-            setCookie("usercolor", data.color);
+            setCookie("usercolor", newcolor);
         } else {
             alert("invalid hex value, please put in format of RRGGBB")
         }
